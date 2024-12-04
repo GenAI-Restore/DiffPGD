@@ -51,29 +51,30 @@
           <h1 class="title is-1 publication-title">
             <span style="color:#B9770E; font-weight: bold; font-style: italic">Generative Restore</span>
              <br> <!-- 换行 -->
-                Personalized Generative Low-light Image Denoising and Enhancement
+                Scene-Consistent Camera Control for Realistic Text-to-Image Synthesis
                  </h1>
           <div class="is-size-5 publication-authors">
             <div class="author-row">
               <span class="author-block">
-                <a>Xijun Wang</a>,</span>
+                <a href="https://yuanyuspace.cn/about/">Yu Yuan</a><sup>1,*</sup>,</span>
               <span class="author-block">
-                <a>Prateek Chennuri</a>,</span>
+                <a href="https://www.linkedin.com/in/xijun-wang-747475208/">Xijun Wang</a><sup>1,*</sup>,</span>
               <span class="author-block">
-                <a>Yu Yuan</a>,</span>
+                <a href="https://shengcn.github.io/">Yichen Sheng</a><sup>2</sup>,</span>
               <span class="author-block">
-                <a>Bole Ma</a>,</span>
+                <a href="https://www.linkedin.com/in/prateek-chennuri-3a25a8171/">Prateek Chennuri</a><sup>1</sup>,</span>
               <span class="author-block">
-                <a>Xingguang Zhang</a>,</span>
+                <a href="https://xg416.github.io/">Xingguang Zhang</a><sup>1</sup>,</span>
             </div>
             <div class="author-row">
               <span class="author-block">
-                <a>Stanley Chan</a></span>
+                <a href="https://engineering.purdue.edu/ChanGroup/stanleychan.html">Stanley Chan</a><sup>1,†</sup>,</span>
             </div>
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"></sup>Purdue University</span>
+            <span class="author-block"><sup>1</sup>Purdue University,</span>
+            <span class="author-block"><sup>2</sup>NVIDIA Research</span>
           </div>
 
           <div class="column has-text-centered">
@@ -106,6 +107,15 @@
                   </span>
                   <span>Code(coming)</span>
                   </a>
+                <!-- HuggingFace Link. -->
+              <span class="link-block">
+              <a href="https://huggingface.co/spaces/"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                    <i class="fas fa-robot"></i>
+                </span>
+                <span>Demo(coming)</span>
+              </a>
               </span>
             </span>
             </div>
@@ -116,15 +126,17 @@
     </div>
   </div>
 </section>
-<!--<section class="hero teaser">-->
-<!--  <div class="container is-max-desktop">-->
-<!--    <div class="hero-body">-->
-<!--      <h2 class="subtitle has-text-centered">-->
-<!--        <span class="dnerf"></span> Text-to-Image generation that understands camera physics!-->
-<!--      </h2>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</section>-->
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf"></span> Text-to-Image generation that understands camera physics!
+      </h2>
+    </div>
+  </div>
+</section>
+
 
 <style>
   /* 全局容器样式 */
@@ -195,17 +207,20 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            While <strong>smartphone cameras</strong> today can produce astonishingly good photos,
-            their performance in <strong>low light</strong> is still not completely satisfactory because of the fundamental limits in
-            photon shot noise and sensor read noise. Generative image restoration methods have demonstrated promising
-            results compared to traditional methods, but they suffer from hallucinatory content generation when the
-            signal-to-noise ratio (SNR) is low. Recognizing the availability of personalized photo galleries on
-            users' smartphones, we propose <strong>Personalized Generative Denoising (PGD)</strong> by building a diffusion model
-            customized for different users. Our core innovation is an identity-consistent physical buffer that extracts
-            the physical attributes of the person from the gallery. This ID-consistent physical buffer provides a strong
-            prior that can be integrated with the diffusion model to restore the degraded images, without the need of
-            fine-tuning. Over a wide range of low-light testing scenarios, we show that PGD achieves superior image
-            denoising and enhancement performance compared to existing diffusion-based denoising approaches.
+            Image generation today can produce somewhat realistic images from text prompts.
+            However, if one asks the generator to synthesize a particular camera setting such as
+            creating different fields of view using a 24mm lens versus a 70mm lens,
+            the generator will not be able to interpret and generate scene-consistent images.
+            This limitation not only hinders the adoption of generative tools in photography applications
+            but also exemplifies a broader issue of bridging the gap between
+            the data-driven models and the physical world.
+            In this paper, we introduce the concept of <strong>Generative Photography</strong>,
+            a framework designed to control <strong>camera intrinsic settings</strong> during content generation.
+            The core innovation of this work are the concepts of <strong>Dimensionality Lifting
+            and Contrastive Camera Learning</strong>, which achieve continuous and consistent transitions for
+            different camera settings. Experimental results show that our method produces significantly
+            more scene-consistent photorealistic images than state-of-the-art models such as Stable Diffusion 3 and FLUX.
+
           </p>
         </div>
       </div>
@@ -230,14 +245,6 @@
 
             This work introduces a novel approach that addresses these issues,
             enabling precise camera setting control and consistent scenes in generative models.
-            Smartphone cameras today store hundreds if not thousands of a user's photos, captured at different times,
-            in different places, and under different lighting conditions. While these images have many variations,
-            they are all about the \emph{same person(s)}. Therefore, if the imaging goal is to take a photo of this
-            user, the gallery on the phone would be the best source to build a prior $p(\mathbf{x})$. The situation is
-            summarized in Fig.~\ref{fig:idea}. In the context of diffusion-based image restoration, the original
-            solution space can be large because many candidate solutions are consistent with the noisy observation.
-            The gallery provides a strong constraint to the search problem. This allows us to search for better quality
-            images with high precision of the person's identity.
           </p>
           <table style="width:100%">
              <tr>
