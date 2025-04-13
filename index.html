@@ -9,7 +9,7 @@
   <title>Personalized Generative Low-light Image Denoising and Enhancement</title>
   <style>
     .move-right {
-      margin-left: 200px; /* Moves this specific image 100px to the right */
+      margin-left: 170px; /* Moves this specific image 100px to the right */
     }
   </style>
 
@@ -72,12 +72,89 @@
       margin-bottom: 30px;
     }
 
+    /*.juxtapose-container {*/
+    /*  width: 90%;*/
+    /*  max-width: 1200px;*/
+    /*  margin: 20px auto;*/
+    /*}*/
+
     .juxtapose-container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 20px auto;
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    margin: 20px auto;
     }
+
+    .button.is-selected {
+    box-shadow: 0 0 0 2px #444 inset;
+    font-weight: bold;
+  }
+
   </style>
+
+<style>
+  .switch-case-section {
+    margin-top: 10px;
+  }
+
+  .case-button {
+    border-radius: 12px;
+    font-weight: 500;
+  }
+
+  .case1 {
+    background-color: #f8d7da;
+    color: #58151c;
+  }
+
+  .case2 {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+  }
+
+  .case3 {
+    background-color: #e5d5ea;
+    color: #4c3b5f;
+  }
+
+  .case-button:hover {
+    filter: brightness(0.95);
+  }
+
+  .case-note {
+    font-size: 1.05rem;
+    color: #444;
+    margin-top: 5px;
+  }
+</style>
+
+  <style>
+.example-slider-wrapper {
+  overflow: hidden;
+  width: 100vw;
+  max-width: 100vw;
+  margin: auto;
+}
+
+.example-slider {
+  display: flex;
+  width: 300vw;  /* 注意这里是 vw 不是 % */
+  transition: transform 0.5s ease-in-out;
+}
+
+.example-slide {
+  width: 100vw;
+  flex-shrink: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+</style>
+
+
 
 </head>
 
@@ -218,17 +295,17 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            While <strong>smartphone cameras</strong> today can produce astonishingly good photos,
-            their performance in <strong>low light</strong> is still not completely satisfactory because of the fundamental limits in
-            photon shot noise and sensor read noise. Generative image restoration methods have demonstrated promising
-            results compared to traditional methods, but they suffer from hallucinatory content generation when the
-            signal-to-noise ratio (SNR) is low. Recognizing the availability of personalized photo galleries on
-            users' smartphones, we propose <strong>Personalized Generative Denoising (PGD)</strong> by building a diffusion model
-            customized for different users. Our core innovation is an identity-consistent physical buffer that extracts
-            the physical attributes of the person from the gallery. This ID-consistent physical buffer provides a strong
-            prior that can be integrated with the diffusion model to restore the degraded images, without the need of
-            fine-tuning. Over a wide range of low-light testing scenarios, we show that PGD achieves superior image
-            denoising and enhancement performance compared to existing diffusion-based denoising approaches.
+            Modern cameras produce remarkably high-quality images, yet their performance in <strong>low-light</strong> conditions remains
+            suboptimal due to fundamental limitations in photon shot noise and sensor read noise. While generative image
+            restoration methods have shown promising results compared to traditional approaches, they often suffer from
+            hallucinatory content generation when the signal-to-noise ratio (SNR) is low. Leveraging the availability of
+            <strong>personalized photo galleries</strong> on users' smartphones, we introduce <strong>Diffusion-based Personalized Generative
+            Denoising (DiffPGD)</strong>, a novel approach that builds a customized diffusion model for individual users. Our key
+            innovation lies in the development of an <strong>identity-consistent physical buffer</strong> that extracts the physical attributes
+            of the person from the gallery. This ID-consistent physical buffer serves as a robust prior that can be seamlessly
+            integrated into the diffusion model to restore degraded images without the need for fine-tuning. Over a wide
+            range of low-light testing scenarios, we show that DiffPGD achieves superior image denoising and enhancement
+            performance compared to existing diffusion-based denoising approaches.
 
           </p>
         </div>
@@ -246,7 +323,7 @@
         <h2 class="title is-3">Motivation</h2>
         <div class="content has-text-justified">
           <div class="center">
-          <img src="./static/images/Figures/Intuition_2.png" width="500" height="400" alt="framework" class="move-right">
+          <img src="./static/images/Figures/concept_fig.png" width="600" height="700" alt="framework" class="move-right">
           </div>
           <p>
             <li>
@@ -262,9 +339,9 @@
             <li>
             <strong>Physical Buffers to the Rescue?</strong> Given the gallery photos, what kind of prior information
             would be useful for restoration? Advancements in computer vision have made it possible to extract detailed
-              facial <strong>physical buffers</strong>—including albedo and normal maps—from a person's gallery of images. These
-            physical buffers capture intrinsic properties such as skin color and surface geometry, effectively encoding
-            an individual's unique identity and fine facial details. At the same time, it
+              facial <strong>physical buffers</strong>—including albedo and normal maps—from a person's gallery of images.
+              These physical buffers capture crucial identity-defining properties such as surface geometry and skin color,
+              effectively encoding an individual's unique identity. At the same time, it
             also eliminates the influence of environmental lighting, pose, and other identity-independent variables. We
             will leverage this rich prior information to improve restoration.
             </li>
@@ -286,14 +363,13 @@
 
         <figure class="figure">
         <img src="./static/videos/framework.gif" alt="A description of the image", style="max-width:100%; height:auto;">
-        <figcaption>The overall architecture of the proposed method. Our core idea is to use ID-consistent physical
-          buffers, extracted from gallery photos, to constrain the generative space in the diffusion model restoration
-          process. For a high-quality gallery, we use LAP (Zhang et al.) to extract the albedo and normal
-          information for each photo and apply adaptive aggregation to fuse the entire gallery. The extracted albedo
-          represents base skin color and texture details, such as skin tone, freckles, and pigmentation, while normal
-          captures facial geometry, including wrinkles, pores, and fine surface variations. In our framework, the output
-          physical buffers isolate the intrinsic ID properties from lighting, shading, and pose, enabling the diffusion
-          model to apply only ID-related information consistently.</figcaption>
+        <figcaption>The overall architecture of the proposed method. Our core idea is to use ID-consistent physical buffers,
+          extracted from gallery photos, to constrain the generative space in the diffusion model restoration process.
+          For a high-quality gallery, we use LAP (Zhang et al.) to extract the albedo and normal information for
+          each photo and apply adaptive aggregation to fuse the entire gallery. The extracted albedo represents base skin
+          color and facial appearance, while normal captures facial geometry. In our framework, the output physical buffers
+          isolate the intrinsic ID properties from lighting, shading, and pose, enabling the diffusion model to apply only
+          ID-related information consistently.</figcaption>
         </figure>
 
 <!--        <video controls width="1280">-->
@@ -312,146 +388,111 @@
 </section>
 
 
+<!-- 滑动视图容器 -->
+<div class="example-slider-wrapper">
+  <div class="example-slider" id="exampleSlider">
 
+    <!-- Example 1 -->
+    <section class="section example-slide" id="example1">
+      <div class="container">
+        <div class="columns is-multiline">
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider1"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider2"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider3"></div></div></div>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider4"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider5"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider6"></div></div></div>
+        </div>
+      </div>
+    </section>
 
-<section class="section">
-  <div class="container">
-    <h2 class="title is-3 has-text-centered">Synthetic Case Comparisons</h2>
+    <!-- Example 2 -->
+    <section class="section example-slide" id="example2">
+      <div class="container">
+        <div class="columns is-multiline">
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider7"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider8"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider9"></div></div></div>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider10"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider11"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider12"></div></div></div>
+        </div>
+      </div>
+    </section>
 
-    <!-- 第一行滑块 -->
-    <div class="columns is-multiline">
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider9"></div>
+    <!-- Example 3 -->
+    <section class="section example-slide" id="example3">
+      <div class="container">
+        <div class="columns is-multiline">
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider13"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider14"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider15"></div></div></div>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider16"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider17"></div></div></div>
+          <div class="column is-4"><div class="juxtapose-container"><div class="juxtapose" id="slider18"></div></div></div>
         </div>
       </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider10"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider11"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider12"></div>
-        </div>
-      </div>
-    </div>
+    </section>
 
-    <!-- 第二行滑块 -->
-    <div class="columns is-multiline">
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider13"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider14"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider15"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider16"></div>
-        </div>
-      </div>
-    </div>
   </div>
-</section>
+</div>
 
 
 
-
-<section class="section">
-  <div class="container">
-    <h2 class="title is-3 has-text-centered">Real-life Case Comparisons</h2>
-
-    <!-- 第一行滑块 -->
-    <div class="columns is-multiline">
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider1"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider2"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider3"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider4"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 第二行滑块 -->
-    <div class="columns is-multiline">
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider5"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider6"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider7"></div>
-        </div>
-      </div>
-      <div class="column is-3">
-        <div class="juxtapose-container">
-          <div class="juxtapose" id="slider8"></div>
-        </div>
-      </div>
-    </div>
+<!-- 滑动视图容器 -->
+<div class="has-text-centered switch-case-section">
+  <div class="buttons has-addons is-centered case-button-group">
+    <button id="btn1" class="button is-medium case-button case1" onclick="showExample('example1')">Example 1</button>
+    <button id="btn2" class="button is-medium case-button case2" onclick="showExample('example2')">Example 2</button>
+    <button id="btn3" class="button is-medium case-button case3" onclick="showExample('example3')">Example 3</button>
   </div>
-</section>
-
+  <p class="case-note">Click the buttons above to switch between real-life case examples.</p>
+</div>
 
 
 
 <script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const sliderData = [
-      { id: "slider1", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/Ours.png", labelBefore: "Input", labelAfter: "Ours" },
-      { id: "slider2", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/ACE-Net.png", labelBefore: "Input", labelAfter: "ACE-Net" },
-      { id: "slider3", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/MIRNet.png", labelBefore: "Input", labelAfter: "MIRNet" },
-      { id: "slider4", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/UTV-Net.png", labelBefore: "Input", labelAfter: "UTV-Net" },
-      { id: "slider5", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/DiffLL.png", labelBefore: "Input", labelAfter: "DiffLL" },
-      { id: "slider6", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/DR2.png", labelBefore: "Input", labelAfter: "DR2" },
-      { id: "slider7", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/GFP-GAN.png", labelBefore: "Input", labelAfter: "GFP-GAN" },
-      { id: "slider8", before: "./static/images/processed_2_256/Input.png", after: "./static/images/processed_2_256/SNRNet.png", labelBefore: "Input", labelAfter: "SNR-aware" },
-      { id: "slider9", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/Ours.png", labelBefore: "Input", labelAfter: "Ours" },
-      { id: "slider10", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/ACE-Net.png", labelBefore: "Input", labelAfter: "ACE-Net" },
-      { id: "slider11", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/MIRNet.png", labelBefore: "Input", labelAfter: "MIRNet" },
-      { id: "slider12", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/UTV-Net.png", labelBefore: "Input", labelAfter: "UTV-Net" },
-      { id: "slider13", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/DiffLL.png", labelBefore: "Input", labelAfter: "DiffLL" },
-      { id: "slider14", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/DR2.png", labelBefore: "Input", labelAfter: "DR2" },
-      { id: "slider15", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/GFP-GAN.png", labelBefore: "Input", labelAfter: "GFP-GAN" },
-      { id: "slider16", before: "./static/images/6575_10_ppp/Input.png", after: "./static/images/6575_10_ppp/SNR-aware.png", labelBefore: "Input", labelAfter: "SNR-aware" },
+  const sliderDataMap = {
+    example1: [
+      { id: "slider1", before: "./static/images/website/weijian/weijian_input.png", after: "./static/images/website/weijian/ours.png", labelBefore: "Input", labelAfter: "Ours" },
+      { id: "slider2", before: "./static/images/website/weijian/weijian_input.png", after: "./static/images/website/weijian/codeformer.png", labelBefore: "Input", labelAfter: "CodeFormer" },
+      { id: "slider3", before: "./static/images/website/weijian/weijian_input.png", after: "./static/images/website/weijian/snr_aware.png", labelBefore: "Input", labelAfter: "SNR-aware" },
+      { id: "slider4", before: "./static/images/website/weijian/weijian_input.png", after: "./static/images/website/weijian/mirnet.png", labelBefore: "Input", labelAfter: "MIRNet" },
+      { id: "slider5", before: "./static/images/website/weijian/weijian_input.png", after: "./static/images/website/weijian/gfpgan.png", labelBefore: "Input", labelAfter: "GFPGAN" },
+      { id: "slider6", before: "./static/images/website/weijian/weijian_input.png", after: "./static/images/website/weijian/diffll.png", labelBefore: "Input", labelAfter: "DiffLL" },
+    ],
+    example2: [
+      { id: "slider7", before: "./static/images/website/tharindu/tharindu_input.png", after: "./static/images/website/tharindu/ours.png", labelBefore: "Input", labelAfter: "Ours" },
+      { id: "slider8", before: "./static/images/website/tharindu/tharindu_input.png", after: "./static/images/website/tharindu/codeformer.png", labelBefore: "Input", labelAfter: "CodeFormer" },
+      { id: "slider9", before: "./static/images/website/tharindu/tharindu_input.png", after: "./static/images/website/tharindu/snr_aware.png", labelBefore: "Input", labelAfter: "SNR-aware" },
+      { id: "slider10", before: "./static/images/website/tharindu/tharindu_input.png", after: "./static/images/website/tharindu/mirnet.png", labelBefore: "Input", labelAfter: "MIRNet" },
+      { id: "slider11", before: "./static/images/website/tharindu/tharindu_input.png", after: "./static/images/website/tharindu/gfpgan.png", labelBefore: "Input", labelAfter: "GFPGAN" },
+      { id: "slider12", before: "./static/images/website/tharindu/tharindu_input.png", after: "./static/images/website/tharindu/diffll.png", labelBefore: "Input", labelAfter: "DiffLL" },
+    ],
+    example3: [
+      { id: "slider13", before: "./static/images/website/kavinga/kavinga_input.png", after: "./static/images/website/kavinga/ours.png", labelBefore: "Input", labelAfter: "Ours" },
+      { id: "slider14", before: "./static/images/website/kavinga/kavinga_input.png", after: "./static/images/website/kavinga/codeformer.png", labelBefore: "Input", labelAfter: "CodeFormer" },
+      { id: "slider15", before: "./static/images/website/kavinga/kavinga_input.png", after: "./static/images/website/kavinga/snr_aware.png", labelBefore: "Input", labelAfter: "SNR-aware" },
+      { id: "slider16", before: "./static/images/website/kavinga/kavinga_input.png", after: "./static/images/website/kavinga/mirnet.png", labelBefore: "Input", labelAfter: "MIRNet" },
+      { id: "slider17", before: "./static/images/website/kavinga/kavinga_input.png", after: "./static/images/website/kavinga/gfpgan.png", labelBefore: "Input", labelAfter: "GFPGAN" },
+      { id: "slider18", before: "./static/images/website/kavinga/kavinga_input.png", after: "./static/images/website/kavinga/diffll.png", labelBefore: "Input", labelAfter: "DiffLL" },
+    ]
+  };
 
-    ];
+  let initializedExamples = {};
 
-    sliderData.forEach((data) => {
+  function initJuxtapose(exampleId) {
+    if (initializedExamples[exampleId]) return;
+
+    const sliders = sliderDataMap[exampleId];
+    sliders.forEach((data) => {
       new juxtapose.JXSlider(`#${data.id}`, [
         { src: data.before, label: data.labelBefore },
         { src: data.after, label: data.labelAfter }
@@ -463,6 +504,41 @@
         makeResponsive: true
       });
     });
+
+    initializedExamples[exampleId] = true;
+  }
+
+  const exampleIndexMap = {
+    example1: 0,
+    example2: 1,
+    example3: 2
+  };
+
+  function showExample(exampleId) {
+    const slider = document.getElementById("exampleSlider");
+    const index = exampleIndexMap[exampleId] || 0;
+    const offset = -index * 100;
+    slider.style.transform = `translateX(${offset}vw)`;  // not %
+    // 按钮高亮状态（可选）
+    ['btn1', 'btn2', 'btn3'].forEach((id, i) => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        btn.classList.toggle("is-selected", index === i);
+      }
+    });
+
+    // 初始化 Juxtapose（之前加过）
+    setTimeout(() => {
+      initJuxtapose(exampleId);
+      if (window.juxtapose && juxtapose.refresh) {
+        juxtapose.refresh();
+      }
+    }, 200);
+  }
+
+  // 初始化默认显示的 Example1
+  window.addEventListener('DOMContentLoaded', () => {
+    showExample('example1');
   });
 </script>
 
